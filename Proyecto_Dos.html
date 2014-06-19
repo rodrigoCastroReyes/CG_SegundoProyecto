@@ -68,7 +68,7 @@
         cube.castShadow = true;
         // posicion del cubo
         cube.position.x=6;
-        cube.position.y=3;
+        cube.position.y=5;
         cube.position.z=25;
         // se añade el cubo a la escena
         scene.add(cube);
@@ -80,8 +80,8 @@
         var torus=new THREE.Mesh(torusGeometry,torusMaterial);//se construye el toroide
         //posiciones del toroide 
         torus.position.x=-20;
-        torus.position.y=12;
-        torus.position.z=-17;
+        torus.position.y=10;
+        torus.position.z=-20;
         torus.castShadow=true;
         scene.add(torus);//se añade el toroide a la escena
 
@@ -95,9 +95,9 @@
         var pyramidMaterial=new THREE.MeshLambertMaterial({color: 0x2ef72e,shading:THREE.FlatShading}); //tipo de material de la piramide
         var pyramid=new THREE.Mesh(pyramidGeometry,pyramidMaterial);//se construye la piramide
         //posiciones de la piramide 
-        pyramid.position.x=30;
+        pyramid.position.x=20;
         pyramid.position.y=12;
-        pyramid.position.z=-15;
+        pyramid.position.z=0;
         pyramid.castShadow=true;
         scene.add(pyramid); //se añade la piramide a la escena       
        
@@ -106,9 +106,9 @@
         var sphereMaterial = new THREE.MeshLambertMaterial({color: 0x7777ff,shading:THREE.FlatShading });
         var sphere = new THREE.Mesh(sphereGeometry,sphereMaterial);
         // posicion de la esfera
-        sphere.position.x=20;
-        sphere.position.y=10;
-        sphere.position.z=4;
+        sphere.position.x=0;
+        sphere.position.y=14;
+        sphere.position.z=20;
         sphere.castShadow=true;
         // se añade la esfera a la escena
         scene.add(sphere);         
@@ -163,6 +163,26 @@
         controls.panSpeed = 0.2;
 
 
+        var gui=new dat.GUI();
+        var controlSpeed;
+        var speeds=new function(){
+            this.cubeSpeed=0.01;
+            this.torusSpeed=0.02;
+            this.pyramidSpeed=0.02;
+            this.sphereSpeed=0.02;
+        }
+
+        controlSpeed=gui.addFolder("Speeds of objects");
+        controlSpeed.add(speeds,"cubeSpeed",0,0.5);
+        controlSpeed.add(speeds,"torusSpeed",0.02,0.5);
+        controlSpeed.add(speeds,"pyramidSpeed",0.01,0.5);
+        controlSpeed.add(speeds,"sphereSpeed",0.02,0.5);
+
+
+        var orbita_cube=0;
+        var orbita_torus=0.02;
+        var orbita_pyramid=0.01;
+        var orbita_sphere=0.02;
         render();
        
 
@@ -170,14 +190,24 @@
 
             // render using requestAnimationFrame
             orbita+=0.01;
-            cube.position.x=10*Math.cos(orbita);
-            cube.position.z=10*Math.sin(orbita);
-            torus.position.x=20*Math.cos(orbita);
-            torus.position.z=20*Math.sin(orbita);
-            sphere.position.x=30*Math.cos(orbita);
-            sphere.position.z=30*Math.sin(orbita);
-            pyramid.position.x=40*Math.cos(orbita);
-            pyramid.position.z=40*Math.sin(orbita);
+
+            orbita_cube+=speeds.cubeSpeed;
+            orbita_torus+=speeds.torusSpeed;
+            orbita_pyramid+=speeds.pyramidSpeed;
+            orbita_sphere+=speeds.sphereSpeed;
+            
+            cube.position.x=10*Math.cos(orbita_cube);
+            cube.position.z=10*Math.sin(orbita_cube);
+
+            torus.position.x=20*Math.cos(orbita_torus);
+            torus.position.z=20*Math.sin(orbita_torus);
+
+            sphere.position.x=30*Math.cos(orbita_sphere);
+            sphere.position.z=30*Math.sin(orbita_sphere);
+
+            pyramid.position.x=40*Math.cos(orbita_pyramid);
+            pyramid.position.z=40*Math.sin(orbita_pyramid);
+            
             requestAnimationFrame(render);
             controls.update();
             renderer.render(scene, camera);
