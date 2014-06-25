@@ -46,11 +46,11 @@
 
 
         // create the ground plane
-        planeWidth=70;
-        planeHeight=60;
+        planeWidth=200;
+        planeHeight=200;
         var planeGeometry = new THREE.PlaneGeometry(planeWidth,planeHeight,1,1);
         // PlaneGeometry(width, height, widthSegments, heightSegments) widthSegments y heightSegments son parametros opcionales y son 1 por defecto
-        var planeMaterial =    new THREE.MeshLambertMaterial({color: 0xffffff});
+        var planeMaterial =    new THREE.MeshLambertMaterial({color: 0xe0f8f1});
         var plane = new THREE.Mesh(planeGeometry,planeMaterial);
         plane.receiveShadow  = true;
 
@@ -73,7 +73,7 @@
         var cube = new THREE.Mesh(cubeGeometry, cubeMaterialFlatShanding);
         // posicion del cubo
         cube.position.x=6;
-        cube.position.y=5;
+        cube.position.y=7;
         cube.position.z=25;
         // se añade el cubo a la escena
         scene.add(cube);
@@ -131,8 +131,8 @@
    
 
         camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000 );
-        camera.position.x= -30;
-        camera.position.y=  40; 
+        camera.position.x= -50;
+        camera.position.y=  25; 
         camera.position.z= 30;
         camera.lookAt(scene.position);
         scene.add(camera);
@@ -147,7 +147,7 @@
                 var material    = new THREE.MeshLambertMaterial({color: 0x660066},shading=THREE.FlatShading); 
                 var mesh    = new THREE.Mesh( geometry, material ); 
                 mesh.position.x= 0;
-                mesh.position.y=0;
+                mesh.position.y=4;
                 mesh.position.z=0;
                 mesh.scale.set(2,2,2);
                 scene.add( mesh ); 
