@@ -205,7 +205,16 @@
 
 
         view.StopObjects=false;// control de la detencion de los objetos
-        gui.add(view,'StopObjects');
+        gui.add(view,'StopObjects').listen().onChange(function(value){
+
+            if(!value){
+                rotateCube=false;
+                rotateSphere=false;
+                rotatePyramid=false;
+                rotateTorus=false;
+            }
+        });
+
 
         var orbita_cube=0;
         var orbita_torus=0.02;
@@ -222,7 +231,6 @@
             controls.noPan = false;
         }
         
-       
         render();
        
        //control de la velocidad de los objetos
@@ -286,7 +294,6 @@
         var vector;
         var ray;
         var intersects;
-        var flag=false;
         renderer.domElement.addEventListener( 'mousedown', onMouseDown );// se maneja el evento del click
 
         function onMouseDown(event) {
