@@ -154,6 +154,25 @@
         camera.lookAt(scene.position);
         scene.add(camera);
 
+
+
+
+        //creacion de satelites:
+        var radius_satellites=1;//radio de la esfera del satelite
+        var radius_orbita_satelite=6; //radio de la orbita que siguen los satelites alrededror de los objetos
+        var sphereGeometrySatellites = new THREE.SphereGeometry(radius_satellites,15,15);
+        var sphereMaterial = new THREE.MeshLambertMaterial({color: 0xf8fbef });
+        var sphereSatellite1 = new THREE.Mesh(sphereGeometrySatellites,sphereMaterial);
+        var sphereSatellite2 = new THREE.Mesh(sphereGeometrySatellites,sphereMaterial);
+        var sphereSatellite3 = new THREE.Mesh(sphereGeometrySatellites,sphereMaterial);
+        var sphereSatellite4 = new THREE.Mesh(sphereGeometrySatellites,sphereMaterial);
+        sphereSatellite1.position.set(cube.position.x,cube.position.y ,cube.position.z + radius_orbita_satelite);
+        sphereSatellite2.position.set(sphere.position.x,sphere.position.y ,sphere.position.z + radius_orbita_satelite);
+        sphereSatellite3.position.set(torus.position.x,torus.position.y ,torus.position.z + radius_orbita_satelite);
+        sphereSatellite4.position.set(pyramid.position.x,pyramid.position.y ,pyramid.position.z + radius_orbita_satelite);
+        //
+
+
         // add the output of the renderer to the html element
         $("#WebGL-output").append(renderer.domElement);
         
@@ -214,6 +233,26 @@
                 rotateTorus=false;
             }
         });
+
+
+
+        view.enabledSatellites=false;// control de la detencion de los objetos
+        gui.add(view,'enabledSatellites').listen().onChange(function(value){
+            if(value){
+                scene.add(sphereSatellite1);
+                scene.add(sphereSatellite2);
+                scene.add(sphereSatellite3);
+                scene.add(sphereSatellite4);
+            }
+            else{
+                scene.remove(sphereSatellite1);
+                scene.remove(sphereSatellite2);
+                scene.remove(sphereSatellite3);
+                scene.remove(sphereSatellite4);
+            }
+            
+        });
+
 
 
         var orbita_cube=0;
@@ -330,6 +369,15 @@
 
                 pyramid.position.x=40*Math.cos(orbita_pyramid);
                 pyramid.position.z=40*Math.sin(orbita_pyramid);
+
+
+                //seguimiento de la posicion de los cuepos 
+                sphereSatellite1.position.set(radius_orbita_satelite*Math.cos(orbita_cube)+ cube.position.x,cube.position.y ,cube.position.z + radius_orbita_satelite*Math.sin(orbita_cube));
+                sphereSatellite2.position.set(radius_orbita_satelite*Math.cos(orbita_sphere)+ sphere.position.x,sphere.position.y ,sphere.position.z + radius_orbita_satelite*Math.sin(orbita_sphere));
+                sphereSatellite3.position.set(radius_orbita_satelite*Math.cos(orbita_torus)+ torus.position.x,torus.position.y ,torus.position.z + radius_orbita_satelite*Math.sin(orbita_torus));
+                sphereSatellite4.position.set(radius_orbita_satelite*Math.cos(orbita_pyramid)+ pyramid.position.x,pyramid.position.y ,pyramid.position.z + radius_orbita_satelite*Math.sin(orbita_pyramid));
+
+       
             }
 
             if(view.GouraudShading){
