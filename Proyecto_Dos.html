@@ -219,6 +219,10 @@
         view.FlatShading=true;
         view.GouraudShading=false;
         view.PhongShading=false;
+        view.Light1=true;
+        view.Light2=true;
+        view.Light3=true;
+        view.Light4=true;
         
         initShading();// se inicializa la interfaz para el control de los shadings
 
@@ -323,6 +327,41 @@
                     cube.material=cubeMaterialPhongShading;
                     torus.material=torusMaterialPhongShading;
                     pyramid.material=pyramidMaterialPhongShading;
+                }
+            });
+            controlShading=gui.addFolder("Lights");
+
+            controlShading.add(view,'Light1').listen().onChange(function(value){
+                view.Light1=value;
+                if(value){
+                    scene.add( spotLight1 );
+                }else{
+                    scene.remove( spotLight1 );
+                }
+            });
+            controlShading.add(view,'Light2').listen().onChange(function(value){
+                view.Light2=value;
+                if(value){
+                    scene.add( spotLight2 );
+                }else{
+                    scene.remove( spotLight2 );
+                }
+            });
+            controlShading.add(view,'Light3').listen().onChange(function(value){
+                view.Light3=value;
+                if(value){
+                    scene.add( spotLight3 );
+                }
+                else{
+                    scene.remove( spotLight3 );
+                }
+            });
+            controlShading.add(view,'Light4').listen().onChange(function(value){
+                view.Light4=value;
+                if(value){
+                    scene.add( spotLight4 );
+                }else{
+                    scene.remove( spotLight4 );
                 }
             });
         
