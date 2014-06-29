@@ -222,19 +222,27 @@
         //se inicializan las luces y se añaden a la escena
         var spotLight1 = new THREE.SpotLight( 0xffffff );
         spotLight1.position.set( -window.innerWidth/2,window.innerHeight/2,20 );
-        scene.add( spotLight1 );
+        var pointLight1 = new THREE.PointLight( 0xffffff,0.5,0);
+        pointLight1.position.set( -window.innerWidth/2,window.innerHeight/2,20 );
+        scene.add( pointLight1 );
  
         var spotLight2 = new THREE.SpotLight( 0xffffff );
         spotLight2.position.set( -window.innerWidth/2, -window.innerHeight/2,20 );
-        scene.add( spotLight2 );
+        var pointLight2 = new THREE.PointLight( 0xffffff,0.5,0);
+        pointLight2.position.set( -window.innerWidth/2, -window.innerHeight/2,20 );
+        scene.add( pointLight2 );
  
         var spotLight3 = new THREE.SpotLight( 0xffffff );
         spotLight3.position.set( window.innerWidth/2, window.innerHeight/2,20 );
-        scene.add( spotLight3 );
+        var pointLight3 = new THREE.PointLight( 0xffffff,0.5,0);
+        pointLight3.position.set( window.innerWidth/2, window.innerHeight/2,20 );
+        scene.add( pointLight3 );
  
         var spotLight4 = new THREE.SpotLight( 0xffffff );
         spotLight4.position.set( window.innerWidth/2, -window.innerHeight/2,20 );
-        scene.add( spotLight4 );
+        var pointLight4 = new THREE.PointLight( 0xffffff,0.5,0);
+        pointLight4.position.set( window.innerWidth/2, -window.innerHeight/2,20 );
+        scene.add( pointLight4 );
 
         //Se inicializan los controles de la escena
         var  gui=new dat.GUI();
@@ -254,7 +262,8 @@
         view.Light2=true;
         view.Light3=true;
         view.Light4=true;
-        
+        view.SpotLight=false;
+        view.PointLight=true;
         initShading();// se inicializa la interfaz para el control de los shadings
 
 
@@ -393,37 +402,145 @@
             controlShading.add(view,'Light1').listen().onChange(function(value){
                 view.Light1=value;
                 if(value){
-                    scene.add( spotLight1 );
+                    if(view.SpotLight)
+                        scene.add( spotLight1 );
+                    else
+                        scene.add( pointLight1 );
                 }else{
-                    scene.remove( spotLight1 );
+                    if(view.SpotLight)
+                        scene.remove( spotLight1 );
+                    else
+                        scene.remove( pointLight1 );
                 }
             });
             controlShading.add(view,'Light2').listen().onChange(function(value){
                 view.Light2=value;
                 if(value){
-                    scene.add( spotLight2 );
+                    if(view.SpotLight)
+                        scene.add( spotLight2 );
+                    else
+                        scene.add( pointLight2 );
                 }else{
-                    scene.remove( spotLight2 );
+                    if(view.SpotLight)
+                        scene.remove( spotLight2 );
+                    else
+                        scene.remove( pointLight2 );
                 }
             });
             controlShading.add(view,'Light3').listen().onChange(function(value){
                 view.Light3=value;
                 if(value){
-                    scene.add( spotLight3 );
-                }
-                else{
-                    scene.remove( spotLight3 );
+                    if(view.SpotLight)
+                        scene.add( spotLight3 );
+                    else
+                        scene.add( pointLight3 );
+                }else{
+                    if(view.SpotLight)
+                        scene.remove( spotLight3 );
+                    else
+                        scene.remove( pointLight3 );
                 }
             });
             controlShading.add(view,'Light4').listen().onChange(function(value){
                 view.Light4=value;
                 if(value){
-                    scene.add( spotLight4 );
+                    if(view.SpotLight)
+                        scene.add( spotLight4 );
+                    else
+                        scene.add( pointLight4 );
                 }else{
-                    scene.remove( spotLight4 );
+                    if(view.SpotLight)
+                        scene.remove( spotLight4 );
+                    else
+                        scene.remove( pointLight4 );
                 }
             });
-        
+            controlShading=gui.addFolder("Type Lights");
+            controlShading.add(view,'SpotLight').listen().onChange(function(value){
+                if(value){
+                    view.PointLight=false;
+                    view.SpotLight=true;
+                    if(view.Light1){
+                        scene.add( spotLight1 );
+                        scene.remove( pointtLight1 );
+                    }
+                    if(view.Light2){
+                        scene.add( spotLight2 );
+                        scene.remove( pointtLight2 );
+                    }
+                    if(view.Light3){
+                        scene.add( spotLight3 );
+                        scene.remove( pointtLight3 );
+                    }
+                    if(view.Light4){
+                        scene.add( spotLight4 );
+                        scene.remove( pointtLight4 );
+                    }
+                }
+                else{
+                    view.PointLight=true;
+                    view.SpotLight=false;
+                    if(view.Light1){
+                        scene.add( pointLight1 );
+                        scene.remove(spotLight1);
+                    }
+                    if(view.Light2){
+                        scene.add( pointLight2 );
+                        scene.remove(spotLight2);
+                    }
+                    if(view.Light3){
+                        scene.add( pointLight3 );
+                        scene.remove(spotLight3);
+                    }
+                    if(view.Light4){
+                        scene.add( pointLight4 );
+                        scene.remove(spotLight4);
+                    }
+                }     
+            });
+            controlShading.add(view,'PointLight').listen().onChange(function(value){
+                
+                if(value){
+                    view.PointLight=true;
+                    view.SpotLight=false;
+                    if(view.Light1){
+                        scene.add( pointLight1 );
+                        scene.remove(spotLight1);
+                    }
+                    if(view.Light2){
+                        scene.add( pointLight2 );
+                        scene.remove(spotLight2);
+                    }
+                    if(view.Light3){
+                        scene.add( pointLight3 );
+                        scene.remove(spotLight3);
+                    }
+                    if(view.Light4){
+                        scene.add( pointLight4 );
+                        scene.remove(spotLight4);
+                    }
+                }else{
+                    view.PointLight=false;
+                    view.SpotLight=true;
+                    if(view.Light1){
+                        scene.remove( pointLight1 );
+                        scene.add(spotLight1);
+                    }
+                    if(view.Light2){
+                        scene.add( pointLight2 );
+                        scene.remove(spotLight2);
+                    }
+                    if(view.Light3){
+                        scene.add( pointLight3 );
+                        scene.remove(spotLight3);
+                    }
+                    if(view.Light4){
+                        scene.add( pointLight4 );
+                        scene.remove(spotLight4);
+                    }
+                } 
+
+            });
         }
 
         function removeObjects(collection){
