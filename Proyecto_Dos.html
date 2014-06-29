@@ -73,7 +73,6 @@
         var cubeMaterialPhongShading= new THREE.MeshPhongMaterial({
                     specular: '#a9fcff',
                     color: '#ff0000',
-                    emissive: '#006063',
                     shininess: 100 
         });
 
@@ -98,7 +97,6 @@
         var torusMaterialPhongShading=new THREE.MeshPhongMaterial({
                     specular: '#a9fcff',
                     color: '#fff000',
-                    emissive: '#006063',
                     shininess: 100 
         });
 
@@ -128,7 +126,6 @@
         var pyramidMaterialPhongShading=new THREE.MeshPhongMaterial({
                     specular: '#a9fcff',
                     color: '#2ef72e',
-                    emissive: '#006063',
                     shininess: 100 
         });
 
@@ -156,7 +153,6 @@
         var sphereMaterialPhongShading= new THREE.MeshPhongMaterial({
                     specular: '#a9fcff',
                     color: '#7777ff',
-                    emissive: '#006063',
                     shading: THREE.SmoothShading,
                     shininess: 100 
         });
@@ -204,16 +200,36 @@
         $("#WebGL-output").append(renderer.domElement);
         
         //Tetera
-       var jsonLoader=new THREE.JSONLoader();
-       jsonLoader.load("teapot.js", function(geometry) { 
-                var material    = new THREE.MeshLambertMaterial({color: 0x660066},shading=THREE.FlatShading); 
-                var teapot    = new THREE.Mesh( geometry, material ); 
-                teapot.position.x= 0;
-                teapot.position.y=6;
-                teapot.position.z=0;
-                teapot.scale.set(2,2,2);
-                scene.add(teapot); 
+        var teapotMaterialPhong= new THREE.MeshPhongMaterial({
+                    specular: '#a9fcff',
+                    color: '#660066',
+                    shininess: 100 
         });
+
+        var teapotMaterialGourand=new THREE.MeshLambertMaterial({color: 0x660066},shading=THREE.SmoothShading);
+
+        var teapotMaterialFlat = new THREE.MeshLambertMaterial({color: 0x660066},shading=THREE.FlatShading);
+
+        var teapots=[];
+       
+        var jsonLoader=new THREE.JSONLoader();
+        var jsonLoaderDos=new THREE.JSONLoader();
+        var jsonLoaderTres=new THREE.JSONLoader();
+        var teapot;
+
+        loadTeapot(jsonLoader,teapotMaterialFlat);
+        
+
+        function loadTeapot(loader,material){
+            loader.load("teapot.js", function(geometry) { 
+                        teapot    = new THREE.Mesh( geometry, material); 
+                        teapot.position.x= 0;
+                        teapot.position.y=6;
+                        teapot.position.z=0;
+                        teapot.scale.set(2,2,2);            
+                        scene.add(teapot);
+            });
+        }
 
         objectsCurrent=objectsFlat;
 
@@ -346,21 +362,16 @@
                 if(value){
                     view.GouraudShading=false;
                     view.PhongShading=false;
-
-                    removeObjects(objectsCurrent);
-                    changePosition(objectsFlat,objectsCurrent);
-                    
+                    removeObjects(objectsCurrent);//se remueven los objetos actuales de la escena
+                    changePosition(objectsFlat,objectsCurrent);//se copian las posiciones y rotaciones de los objetos actuales a los nuevos objetos
+                    //actualiza los nuevos objetos con el nuevo material
                     cube=objectsFlat[0];
-                   // rotateCube=false;
                     torus=objectsFlat[1];
-                    //rotateTorus=false;
                     pyramid=objectsFlat[2];
-                    //rotatePyramid=false;
                     sphere=objectsFlat[3];
-                   // rotateSphere=false;
-                    
-                    objectsCurrent=objectsFlat;
-                    addObjects(objectsCurrent);
+                    loadTeapot(jsonLoader,teapotMaterialFlat);//carga la tetera con el nuevo material
+                    objectsCurrent=objectsFlat;//actualiza la coleccion actual
+                    addObjects(objectsCurrent);//se añade de nuevo los objetos a la escena
                 }
             });
 
@@ -368,16 +379,16 @@
                 if(value){
                     view.FlatShading=false;
                     view.PhongShading=false;
-                    removeObjects(objectsCurrent);
-                    changePosition(objectsGouraud,objectsCurrent);
-
-                    cube=objectsGouraud[0]; //rotateCube=false;
-                    torus=objectsGouraud[1]; //rotateTorus=false;
-                    pyramid=objectsGouraud[2]; //rotatePyramid=false;
-                    sphere=objectsGouraud[3]; //rotateSphere=false;
-
-                    objectsCurrent=objectsGouraud;
-                    addObjects(objectsCurrent);
+                    removeObjects(objectsCurrent);//se remueven los objetos actuales de la escena
+                    changePosition(objectsGouraud,objectsCurrent); //se copian las posiciones y rotaciones de los objetos actuales a los nuevos objetos
+                    //actualiza los nuevos objetos con el nuevo material
+                    cube=objectsGouraud[0]; 
+                    torus=objectsGouraud[1]; 
+                    pyramid=objectsGouraud[2]; 
+                    sphere=objectsGouraud[3]; 
+                    loadTeapot(jsonLoaderDos,teapotMaterialGourand);//carga la tetera con el nuevo material
+                    objectsCurrent=objectsGouraud;//actualiza la coleccion actual
+                    addObjects(objectsCurrent);//se añade de nuevo los objetos a la escena
                 }
             });
 
@@ -387,12 +398,11 @@
                     view.GouraudShading=false;
                     removeObjects(objectsCurrent);
                     changePosition(objectsPhong,objectsCurrent);
-
                     cube=objectsPhong[0]; //rotateCube=false;
                     torus=objectsPhong[1]; //rotateTorus=false;
                     pyramid=objectsPhong[2]; //rotatePyramid=false;
                     sphere=objectsPhong[3]; //rotateSphere=false;
-
+                    loadTeapot(jsonLoaderTres,teapotMaterialPhong);//carga la tetera con el nuevo material
                     objectsCurrent=objectsPhong;
                     addObjects(objectsCurrent);
                 }
@@ -547,6 +557,7 @@
             for(var i=0;i<collection.length;i++){
                 scene.remove(collection[i]);
             }
+            scene.remove(teapot);
         }
 
         function addObjects(collection){
